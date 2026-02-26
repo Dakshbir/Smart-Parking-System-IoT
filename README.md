@@ -40,14 +40,12 @@ An IoT-enabled Smart Parking System that helps optimize urban parking space thro
 
 ## 🧠 Authors
 
-- Kaushik Shigavan  
-- Harshad Raurale  
-- Shubham Modi  
-- Priyanshu Worlikar  
+- Siya
+- Dakshbir 
 
 ## 🎓 Academic Info
 
-Final year Diploma Project | Vidyalankar Polytechnic | Dept. of Computer Engineering (2021–22)
+IoT Based Project for 6th Semester
 
 ## 📜 License
 
