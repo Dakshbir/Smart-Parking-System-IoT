@@ -26,6 +26,7 @@ $data_3 = mysqli_fetch_array($result_3);
 
 $id = $data_1['Sensor1'];
 $id_2 = $data_1['Sensor2'];
+$id_3 = $data_1['Sensor3'];
 //echo $id."<br>";
 
 $no = $data['no'];
@@ -44,7 +45,7 @@ $a = "empty";
 //INSERT INTO `a_test` (`SR_NO`, `Name`) VALUES ('1', 'book')
 
 if($slot1 == true){
-if($id = 'p1s3off'){
+if($id_3 == 'p1s1off'){
     if($state == 'empty'){
         $udp_up = "UPDATE `booking_up` SET `name` = '$u_name', `number_plate` = '$n_plate', `slot_no` = '1' WHERE `booking_up`.`SR_NO` = 1;";
         $result_4 = mysqli_query($conn,$udp_up);
@@ -66,7 +67,7 @@ else{
     echo "Updated<br>";
 }
 }
-else if($id = 'p1s3on'){
+else if($id_3 == 'p1s1on'){
     if($state == 'empty'){
         $udp = "UPDATE `slot_1` SET `state` = 'full' WHERE `slot_1`.`no` = 1";
         $result_1 = mysqli_query($conn,$udp);

@@ -21,9 +21,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Parking extends Fragment {
-    private static final String url_slot1 = "http://192.168.43.199/LogIn-SignUp-master/Slot_1.php";
-    private static final String url_slot2 = "http://192.168.43.199/LogIn-SignUp-master/Slot_2.php";
-    private static final String url_slot3 = "http://192.168.43.199/LogIn-SignUp-master/Slot_3.php";
+    private static final String url_slot1 = "http://10.100.70.36/parking/LogIn-SignUp-master/Slot_1.php";
+    private static final String url_slot2 = "http://10.100.70.36/parking/LogIn-SignUp-master/Slot_2.php";
+    private static final String url_slot3 = "http://10.100.70.36/parking/LogIn-SignUp-master/Slot_3.php";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

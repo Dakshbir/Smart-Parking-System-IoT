@@ -22,7 +22,7 @@ public class Register extends AppCompatActivity {
     Button R_button;
     TextView textView3;
     EditText Name, Phone_no, Email_id, Number_plate, R_password;
-    private final String url = "http://192.168.43.199/Login-Signup-master/DataBaseConfig.php";
+    private final String url = "http://10.100.70.36/parking/LogIn-SignUp-master/register.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

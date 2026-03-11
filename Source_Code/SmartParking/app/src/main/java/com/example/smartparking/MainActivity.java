@@ -21,7 +21,7 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
     Button b_login, b_register;
     EditText Username, Password;
-    private static final String apiurl="http://192.168.43.199/android_db_pool/login_maker.php";
+    private static final String apiurl="http://10.100.70.36/parking/android_db_pool/login_maker.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

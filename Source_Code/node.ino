@@ -6,7 +6,7 @@
 SoftwareSerial mySerial(D8,D7);
 SoftwareSerial nodemcu(D3,D2);
 
-const char* serverName = "http://192.168.43.199/android_db_pool/Sensor_data.php";  
+const char* serverName = "http://10.100.70.36/parking/android_db_pool/Sensor_data.php";  
 
 String apiKeyValue = "tPmAT5Ab3j7F9";
 
@@ -22,7 +22,7 @@ void setup()
   Serial.begin(115200);
   nodemcu.begin(9600);
   mySerial.begin(9600);
-  WiFi.begin("Galaxy M111589","cexo9227");
+  WiFi.begin("Nord 3","daksh0708");
   while (!Serial)continue;
 
   while(WiFi.status() != WL_CONNECTED)
@@ -61,7 +61,7 @@ void loop()
 if(WiFi.status()== WL_CONNECTED){
     HTTPClient http;
     
-    http.begin(client,"http://192.168.43.199/android_db_pool/Sensor_data.php");
+    http.begin(client,"http://10.100.70.36/parking/android_db_pool/Sensor_data.php");
     
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     

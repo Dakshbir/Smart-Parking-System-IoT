@@ -21,7 +21,7 @@ import java.net.URL;
 
 public class Status extends Fragment {
 
-    private static final String url = "http://192.168.43.199/android_db_pool/status.php";
+    private static final String url = "http://10.100.70.36/parking/android_db_pool/status.php";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

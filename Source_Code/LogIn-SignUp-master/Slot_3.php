@@ -46,7 +46,7 @@ $a = "empty";
 //INSERT INTO `a_test` (`SR_NO`, `Name`) VALUES ('1', 'book')
 
 if($slot1 == true){
-if($id_3 = 'p1s3off'){
+if($id == 'p1s3off'){
     if($state == 'empty'){
         $udp_up = "UPDATE `booking_up` SET `name` = '$u_name', `number_plate` = '$n_plate', `slot_no` = '3' WHERE `booking_up`.`SR_NO` = 3;";
         $result_4 = mysqli_query($conn,$udp_up);
@@ -68,7 +68,7 @@ else{
     echo "Updated<br>";
 }
 }
-else if($id_3 = 'p1s3on'){
+else if($id == 'p1s3on'){
     if($state == 'empty'){
         $udp = "UPDATE `slot_3` SET `state` = 'full' WHERE `slot_3`.`no` = 1";
         $result_1 = mysqli_query($conn,$udp);

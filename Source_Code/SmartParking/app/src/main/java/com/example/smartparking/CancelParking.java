@@ -21,7 +21,7 @@ import java.net.URL;
 
 
 public class CancelParking extends Fragment {
-    private static final String url = "http://192.168.43.199/LogIn-SignUp-master/CancleBooking.php";
+    private static final String url = "http://10.100.70.36/parking/LogIn-SignUp-master/CancleBooking.php";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
