@@ -54,7 +54,7 @@ public class Home extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().replace(R.id.container, new Profile()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.container, new CancelParking()).commit();
             }
         });
 

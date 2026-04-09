@@ -1,14 +1,17 @@
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h> 
+#include <Servo.h>
 
-#define STEPPER_PIN_1 9
-#define STEPPER_PIN_2 10
-#define STEPPER_PIN_3 11
-#define STEPPER_PIN_4 12
-int step_number = 0;
+#define SERVO_PIN 9
+#define SERVO_CLOSED_ANGLE 0
+#define SERVO_OPEN_ANGLE 90
+// Set to true if you currently have only one IR sensor connected (pin D4).
+// In this mode, one sensor reading is mirrored to all 3 slot states for testing.
+#define SINGLE_SENSOR_MODE false
 
 SoftwareSerial nodemcu(2,3);
 SoftwareSerial mySerial(7,8);
+Servo gateServo;
 
 int parking1_slot1_ir_s = 4;
 int parking1_slot2_ir_s = 5;
@@ -34,15 +37,14 @@ nodemcu.begin(9600);
 mySerial.begin(9600);
 pinMode(parking1_slot1_ir_s, INPUT);
 pinMode(parking1_slot2_ir_s, INPUT);
-/*pinMode(parking1_slot3_ir_s, INPUT);
+pinMode(parking1_slot3_ir_s, INPUT);
+/*
  
 pinMode(parking2_slot1_ir_s, INPUT);
 pinMode(parking2_slot2_ir_s, INPUT);
 pinMode(parking2_slot3_ir_s, INPUT);*/
-pinMode(STEPPER_PIN_1, OUTPUT);
-pinMode(STEPPER_PIN_2, OUTPUT);
-pinMode(STEPPER_PIN_3, OUTPUT);
-pinMode(STEPPER_PIN_4, OUTPUT);
+gateServo.attach(SERVO_PIN);
+gateServo.write(SERVO_CLOSED_ANGLE);
 
 }
 
@@ -51,8 +53,14 @@ StaticJsonBuffer<1000> jsonBuffer;
 JsonObject& data = jsonBuffer.createObject();
 
 p1slot1(); 
-p1slot2();
-p1slot3();
+if (SINGLE_SENSOR_MODE) {
+  // Mirror slot1 sensor into slot2 and slot3 labels for quick end-to-end testing.
+  sensor2 = (sensor1 == "p1s1on") ? "p1s2on" : "p1s2off";
+  sensor3 = (sensor1 == "p1s1on") ? "p1s3on" : "p1s3off";
+} else {
+  p1slot2();
+  p1slot3();
+}
 
 data["p1"] = sensor1;
 data["p2"] = sensor2;
@@ -93,43 +101,10 @@ digitalWrite(parking2_slot1_ir_s, HIGH);
 digitalWrite(parking2_slot2_ir_s, HIGH);
 digitalWrite(parking2_slot3_ir_s, HIGH);*/
 
-//stepper Motor
-if(slot == "3"){
-/*for (int i = 0; i<12000; i++){
-  OneStep(false);
-  delay(2);
-}
-delay(1000);*/
-for (int i = 0; i<12500; i++){
-  OneStep(true);
-  delay(2);
-}
-delay(10000);
-for (int i = 0; i<12500; i++){
-  OneStep(false);
-  delay(2);
-}
-delay(10000);
-slot = "0";
-}  
-
-if(slot == "2"){
-/*for (int i = 0; i<12000; i++){
-  OneStep(false);
-  delay(2);
-}
-delay(1000);*/
-for (int i = 0; i<19850; i++){
-  OneStep(true);
-  delay(2);
-}
-delay(10000);
-for (int i = 0; i<19850; i++){
-  OneStep(false);
-  delay(2);
-}
-delay(2000);
-slot = "0";
+// Open gate for a valid booked slot and auto-close after delay.
+if(slot == "1" || slot == "2" || slot == "3"){
+  operateGate();
+  slot = "0";
 }
   
 }
@@ -179,67 +154,11 @@ if( digitalRead(parking1_slot3_ir_s) == HIGH)
   } 
 }
 
- void OneStep(bool dir){
-    if(dir){
-switch(step_number){
-  case 0:
-  digitalWrite(STEPPER_PIN_1, HIGH);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 1:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, HIGH);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 2:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, HIGH);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 3:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, HIGH);
-  break;
-} 
-  }else{
-    switch(step_number){
-  case 0:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, HIGH);
-  break;
-  case 1:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, HIGH);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 2:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, HIGH);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 3:
-  digitalWrite(STEPPER_PIN_1, HIGH);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
- 
-  
-} 
-}
-step_number++;
-  if(step_number > 3){
-    step_number = 0;
-    }
+ void operateGate(){
+  gateServo.write(SERVO_OPEN_ANGLE);
+  delay(5000);
+  gateServo.write(SERVO_CLOSED_ANGLE);
+  delay(1000);
 }
  
 /*void p1slot3() // parking 1 slot3

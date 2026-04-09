@@ -1,29 +1,25 @@
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
 #include <ArduinoJson.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
 
-SoftwareSerial mySerial(D8,D7);
-SoftwareSerial nodemcu(D3,D2);
+HardwareSerial mySerial(1);
+HardwareSerial nodemcu(2);
 
 const char* serverName = "http://10.100.70.36/parking/android_db_pool/Sensor_data.php";  
 
-String apiKeyValue = "tPmAT5Ab3j7F9";
-
- 
 WiFiClient client;
-WiFiServer server(80); 
-
-
 
 void setup()
 {
   // Debug console
   Serial.begin(115200);
-  nodemcu.begin(9600);
-  mySerial.begin(9600);
+  // ESP32 UART mapping:
+  // nodemcu channel -> RX GPIO16, TX GPIO17
+  // mySerial channel -> RX GPIO26, TX GPIO25
+  nodemcu.begin(9600, SERIAL_8N1, 16, 17);
+  mySerial.begin(9600, SERIAL_8N1, 26, 25);
   WiFi.begin("Nord 3","daksh0708");
-  while (!Serial)continue;
 
   while(WiFi.status() != WL_CONNECTED)
   {
@@ -34,8 +30,6 @@ void setup()
   Serial.println("NodeMCU is connected");
   Serial.println(WiFi.localIP());
 
-  //client = server.available();
- 
 }
  
 void loop()
@@ -61,13 +55,11 @@ void loop()
 if(WiFi.status()== WL_CONNECTED){
     HTTPClient http;
     
-    http.begin(client,"http://10.100.70.36/parking/android_db_pool/Sensor_data.php");
+  http.begin(client, serverName);
     
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     
     String httpRequestData = "sensor1=" + sensor1 + "&sensor2=" + sensor2 + "&sensor3=" + sensor3 ;
-    Serial.print("httpRequestData: ");
-    Serial.println(httpRequestData);
     Serial.print("httpRequestData: ");
     Serial.println(httpRequestData);
 

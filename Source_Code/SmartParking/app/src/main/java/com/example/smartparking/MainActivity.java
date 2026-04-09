@@ -20,15 +20,22 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     Button b_login, b_register;
-    EditText Username, Password;
-    private static final String apiurl="http://10.100.70.36/parking/android_db_pool/login_maker.php";
+    EditText Username, Password, ServerIP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        ServerIP = (EditText) findViewById(R.id.ServerIP);
         Username = (EditText) findViewById(R.id.Username);
         Password = (EditText) findViewById(R.id.Password);
+
+        // Load previously saved IP
+        SharedPreferences sp = getSharedPreferences("credentials", MODE_PRIVATE);
+        String savedIP = sp.getString("server_ip", "");
+        if (!savedIP.isEmpty()) {
+            ServerIP.setText(savedIP);
+        }
         b_login = (Button) findViewById(R.id.b_login);
         b_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +48,14 @@ public class MainActivity extends AppCompatActivity {
         b_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Register", Toast.LENGTH_SHORT).show();
+                String ip = ServerIP.getText().toString().trim();
+                if (ip.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Please enter Server IP first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // Save IP before going to Register so it can use it
+                SharedPreferences sp = getSharedPreferences("credentials", MODE_PRIVATE);
+                sp.edit().putString("server_ip", ip).commit();
                 Intent intent = new Intent(MainActivity.this, Register.class);
                 startActivity(intent);
             }
@@ -52,7 +66,15 @@ public class MainActivity extends AppCompatActivity {
     {
         Username=(EditText)findViewById(R.id.Username);
         Password=(EditText)findViewById(R.id.Password);
+        ServerIP=(EditText)findViewById(R.id.ServerIP);
 
+        String ip = ServerIP.getText().toString().trim();
+        if (ip.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter Server IP", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String apiurl = "http://" + ip + "/parking/android_db_pool/login_maker.php";
         String qry="?t1="+Username.getText().toString().trim()+"&t2="+Password.getText().toString().trim();
 
         class dbprocess extends AsyncTask<String,Void,String>
@@ -66,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences sp=getSharedPreferences("credentials",MODE_PRIVATE);
                     SharedPreferences.Editor editor=sp.edit();
                     editor.putString("uname",Username.getText().toString());
+                    editor.putString("server_ip", ip);
                     editor.commit();
                     startActivity(new Intent(getApplicationContext(), Dashboard.class));
                 }

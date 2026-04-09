@@ -21,7 +21,6 @@ import java.net.URL;
 
 public class Status extends Fragment {
 
-    private static final String url = "http://10.100.70.36/parking/android_db_pool/status.php";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,10 +39,10 @@ public class Status extends Fragment {
     }
 
     public void cancle(View view) {
-        /*String n1 = t1.getText().toString();
-        String n2 = t2.getText().toString();*/
         SharedPreferences sp= this.getActivity().getSharedPreferences("credentials",MODE_PRIVATE);
         String name = sp.getString("uname","");
+        String ip = sp.getString("server_ip","");
+        String url = "http://" + ip + "/parking/android_db_pool/status.php";
         String n2 = name;
         String qryString = "?n1=" + n2;
         class dbclass extends AsyncTask<String, Void, String> {

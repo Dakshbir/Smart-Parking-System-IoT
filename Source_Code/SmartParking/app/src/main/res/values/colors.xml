@@ -9,4 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lighgrey">#989797</color>
     <color name="underline">#D8D6D6</color>
+    <color name="primary">#1565C0</color>
+    <color name="primaryDark">#0D47A1</color>
+    <color name="primaryLight">#BBDEFB</color>
+    <color name="background">#EEF2F7</color>
+    <color name="textSecondary">#757575</color>
+    <color name="available">#43A047</color>
+    <color name="warningRed">#E53935</color>
 </resources>

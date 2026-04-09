@@ -3,6 +3,7 @@ package com.example.smartparking;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -22,7 +23,6 @@ public class Register extends AppCompatActivity {
     Button R_button;
     TextView textView3;
     EditText Name, Phone_no, Email_id, Number_plate, R_password;
-    private final String url = "http://10.100.70.36/parking/LogIn-SignUp-master/register.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +61,9 @@ public class Register extends AppCompatActivity {
         String R_Email_id = Email_id.getText().toString();
         String R_Number_plate = Number_plate.getText().toString();
         String Pass = R_password.getText().toString();
+        SharedPreferences sp = getSharedPreferences("credentials", MODE_PRIVATE);
+        String ip = sp.getString("server_ip", "");
+        String url = "http://" + ip + "/parking/LogIn-SignUp-master/register.php";
 
         Toast.makeText(getApplicationContext(), R_Email_id, Toast.LENGTH_SHORT).show();
 

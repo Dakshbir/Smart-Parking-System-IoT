@@ -21,7 +21,6 @@ import java.net.URL;
 
 
 public class CancelParking extends Fragment {
-    private static final String url = "http://10.100.70.36/parking/LogIn-SignUp-master/CancleBooking.php";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,10 +41,10 @@ public class CancelParking extends Fragment {
     }
 
     public void cancle(View view) {
-        /*String n1 = t1.getText().toString();
-        String n2 = t2.getText().toString();*/
         SharedPreferences sp= this.getActivity().getSharedPreferences("credentials",MODE_PRIVATE);
         String name = sp.getString("uname","");
+        String ip = sp.getString("server_ip","");
+        String url = "http://" + ip + "/parking/LogIn-SignUp-master/CancleBooking.php";
         String n2 = name;
         String qryString = "?n1=" + n2;
         class dbclass extends AsyncTask<String, Void, String> {
