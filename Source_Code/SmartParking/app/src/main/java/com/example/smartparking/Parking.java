@@ -33,10 +33,9 @@ public class Parking extends Fragment {
         String ip = sp.getString("server_ip", "");
         String url_slot1 = "http://" + ip + "/parking/LogIn-SignUp-master/Slot_1.php";
         String url_slot2 = "http://" + ip + "/parking/LogIn-SignUp-master/Slot_2.php";
-        String url_slot3 = "http://" + ip + "/parking/LogIn-SignUp-master/Slot_3.php";
 
         View view =inflater.inflate(R.layout.fragment_parking, container, false);
-        ImageButton slot1,slot2,slot3;
+        ImageButton slot1,slot2;
 
         slot1 = (ImageButton) view.findViewById(R.id.slot1);
         slot1.setOnClickListener(new View.OnClickListener() {
@@ -51,13 +50,6 @@ public class Parking extends Fragment {
             @Override
             public void onClick(View view) {
                 slot2(slot2);
-            }
-        });
-        slot3 = (ImageButton) view.findViewById(R.id.slot3);
-        slot3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                slot3(slot3);
             }
         });
 
@@ -140,44 +132,5 @@ public class Parking extends Fragment {
 
         dbclass obj = new dbclass();
         obj.execute(url_slot2 + qryString);
-    }
-
-    public void slot3(View view) {
-        SharedPreferences sp= this.getActivity().getSharedPreferences("credentials",MODE_PRIVATE);
-        String name = sp.getString("uname","");
-        String ip = sp.getString("server_ip","");
-        String url_slot3 = "http://" + ip + "/parking/LogIn-SignUp-master/Slot_3.php";
-        String n2 = name;
-        String qryString = "?n1=" + n2;
-        class dbclass extends AsyncTask<String, Void, String> {
-
-            protected void onPostExecute(String data) {
-                /*t1.setText("");
-                t2.setText("");
-                textView.setText(data);*/
-                if(data.equals("full")) {
-                    Toast.makeText(getActivity(), data, Toast.LENGTH_SHORT).show();
-                    //getData();
-                }
-                else{
-                    Toast.makeText(getActivity(), data, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            protected String doInBackground(String... strings) {
-                try {
-                    URL url = new URL(strings[0]);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    return br.readLine();
-                } catch (Exception ex) {
-                    return ex.getMessage();
-                }
-            }
-        }
-
-        dbclass obj = new dbclass();
-        obj.execute(url_slot3 + qryString);
     }
 }

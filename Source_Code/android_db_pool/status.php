@@ -12,10 +12,18 @@ if(!empty($_GET['n1']))
         $resutl = mysqli_query($conn, $get);
 
         $raw = mysqli_fetch_array($resutl);
-        $slot_no = $raw['slot_no'];
+        $slot_no = $raw ? $raw['slot_no'] : '';
 
-        $mot = "UPDATE `motor` SET `slot` = '$slot_no' WHERE `motor`.`no` = 1;";
-        $result_1 = mysqli_query($conn,$mot);
+        if($slot_no == '1' || $slot_no == '2'){
+            $mot = "UPDATE `motor` SET `slot` = '$slot_no' WHERE `motor`.`no` = 1;";
+            $result_1 = mysqli_query($conn,$mot);
+            echo "queued";
+        } else {
+            echo "no active slot";
+        }
+
+    } else {
+        echo "missing user";
     }
     
     

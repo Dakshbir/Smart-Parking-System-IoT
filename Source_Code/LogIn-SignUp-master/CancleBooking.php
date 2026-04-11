@@ -28,7 +28,7 @@ if(!empty($_GET['n1']))
         $empt = "UPDATE `slot_2` SET `state` = 'empty' WHERE `slot_2`.`no` = 1";
     }
     else{
-        $empt = "UPDATE `slot_3` SET `state` = 'empty' WHERE `slot_3`.`no` = 1";
+        $empt = "SELECT 1";
     }
     $result_1 = mysqli_query($conn,$empt);
     echo "Booking Cancled";

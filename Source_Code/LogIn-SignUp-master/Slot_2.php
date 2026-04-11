@@ -1,104 +1,51 @@
 <?php
-$conn = $conn = mysqli_connect("localhost","root","");
-mysqli_select_db($conn,"car_parking");
+$conn = mysqli_connect("localhost", "root", "");
+mysqli_select_db($conn, "car_parking");
 
-$slot1 = true;
-$z = 0;
-if(!empty($_GET['n1']))
-    {
-		$slot = $_GET['n1'];
-        $z = 1;
-        //$val2 = $_POST['sensor2'];
-    }
-
-$qry = "SELECT * FROM `slot_2` WHERE `no` = 1";
-$qry_1 = "SELECT * FROM `data` ORDER BY `data`.`ID` DESC LIMIT 1";
-$qry_2 = "SELECT * FROM `users` WHERE `name` LIKE '$slot'";
- 
-$result = mysqli_query($conn,$qry);
-$result_1 = mysqli_query($conn,$qry_1);
-$result_3 = mysqli_query($conn,$qry_2);
-
-$data = mysqli_fetch_array($result);
-$data_1 = mysqli_fetch_array($result_1);
-$data_3 = mysqli_fetch_array($result_3);
-
-$id = $data_1['Sensor1'];
-$id_2 = $data_1['Sensor2'];
-$id_4 = $data_1['ID'];
-// echo $id_4;
-// echo $id_2."<br>";
-
-$no = $data['no'];
-$state = $data['state'];
-
-$u_name = $data_3['name'];
-$n_plate = $data_3['number_plate'];
-
-$state_a;
-
-$no = $data['no'];
-$state = $data['state'];
-$a = "empty";
-//echo $state."<br>";
-
-//INSERT INTO `a_test` (`SR_NO`, `Name`) VALUES ('1', 'book')
-
-if($slot1 == true){
-if($id_2 == 'p1s2off'){
-    if($state == 'empty'){
-        $udp_up = "UPDATE `booking_up` SET `name` = '$u_name', `number_plate` = '$n_plate', `slot_no` = '2' WHERE `booking_up`.`SR_NO` = 2;";
-        $result_4 = mysqli_query($conn,$udp_up);
-        $udp = "UPDATE `slot_2` SET `state` = 'booked' WHERE `slot_2`.`no` = 1";
-        $result_1 = mysqli_query($conn,$udp);
-        $book = "INSERT INTO `booking` (`name`, `number_plate`, `slot_no`) VALUES ('$u_name', '$n_plate', '2');";
-        $result_2 = mysqli_query($conn,$book);
-        echo "Data entered<br>";
-        
-}
-else if($state == 'booked')
-{
-    $state_a = "Cannot enter data";
-    echo $state_a."<br>";
-}
-else{
-    $udp = "UPDATE `slot_2` SET `state` = 'empty' WHERE `slot_2`.`no` = 1";
-    $result_1 = mysqli_query($conn,$udp);
-    echo "Updated<br>";
-}
-}
-else if($id_2 == 'p1s2on'){
-    if($state == 'empty'){
-        $udp = "UPDATE `slot_2` SET `state` = 'full' WHERE `slot_2`.`no` = 1";
-        $result_1 = mysqli_query($conn,$udp);
-        $state_a = "updata full";
-        echo $state_a."<br>";
-    }
-    else if($state == 'booked'){
-        $udp = "UPDATE `slot_2` SET `state` = 'full' WHERE `slot_2`.`no` = 1";
-        $result_1 = mysqli_query($conn,$udp);
-        $state_a =  "update full";
-        echo $state_a."<br>";
-    }
-    else{
-        $state_a =  "full";
-        echo $state_a."<br>";
-    }
-}
+if (empty($_GET['n1'])) {
+    echo "invalid user";
+    exit();
 }
 
-/*if($state == 'empty' )
-{
-    echo "book";
+$slot = $_GET['n1'];
+
+$userQry = "SELECT * FROM `users` WHERE `name` LIKE '$slot'";
+$userResult = mysqli_query($conn, $userQry);
+$user = mysqli_fetch_array($userResult);
+if (!$user) {
+    echo "invalid user";
+    exit();
 }
-else if($state == 'booked'){
+
+$slotStateQry = "SELECT `state` FROM `slot_2` WHERE `no` = 1";
+$slotStateResult = mysqli_query($conn, $slotStateQry);
+$slotStateRow = mysqli_fetch_array($slotStateResult);
+$slotState = $slotStateRow ? $slotStateRow['state'] : 'full';
+
+if ($slotState != 'empty') {
     echo "full";
+    exit();
 }
-else if($id == 'p1s1on' && $state == 'full'){
-    echo "full";
-}
-else{
-    echo "empty";
-}*/
 
+// Prevent duplicate active booking for the same user.
+$existingBookingQry = "SELECT * FROM `booking_up` WHERE `name` = '$slot' AND `slot_no` != ''";
+$existingBookingResult = mysqli_query($conn, $existingBookingQry);
+if (mysqli_num_rows($existingBookingResult) > 0) {
+    echo "already booked";
+    exit();
+}
+
+$u_name = $user['name'];
+$n_plate = $user['number_plate'];
+
+$bookingUp = "UPDATE `booking_up` SET `name` = '$u_name', `number_plate` = '$n_plate', `slot_no` = '2' WHERE `booking_up`.`SR_NO` = 2";
+mysqli_query($conn, $bookingUp);
+
+$slotUpdate = "UPDATE `slot_2` SET `state` = 'booked' WHERE `slot_2`.`no` = 1";
+mysqli_query($conn, $slotUpdate);
+
+$bookLog = "INSERT INTO `booking` (`name`, `number_plate`, `slot_no`) VALUES ('$u_name', '$n_plate', '2')";
+mysqli_query($conn, $bookLog);
+
+echo "booked";
 ?>
